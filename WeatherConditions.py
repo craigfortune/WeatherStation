@@ -1,3 +1,7 @@
+# Weather conditions
+# Index is Yahoo Weather Code
+# Each element is a tuple of the Yahoo Weather description for the code and
+# a more 'generic type', useful for knowing what icon to display etc
 condition = [0] * 48
 condition[0]='tornado', 'wind'
 condition[1]='tropical storm', 'wind'
@@ -48,8 +52,10 @@ condition[45]='thundershowers', 'rain'
 condition[46]='snow showers', 'snow'
 condition[47]='isolated thundershowers', 'rain'
 
+# Returns whole conditions list
 def getWeatherConditionsList():
     return condition
 
+# Returns a tuple taking Yahoo Weather ID as argument
 def getWeatherCondition(code):
     return condition[code]
