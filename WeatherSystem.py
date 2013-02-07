@@ -8,11 +8,26 @@ class WeatherSystem:
     def __init__(self, woeid):
         self.woeid = woeid
         self.xmlDoc = 0
+
         self.weatherLocation = 0
         self.weatherCode = 0
+
         self.weatherType = 0
         self.weatherDescription = 0
+
         self.lowTemp, self.highTemp = 0, 0
+
+        self.windChill = 0
+        self.windDirection = 0
+        self.windSpeed = 0
+
+        self.atmosphereHumidity = 0
+        self.atmospherePressure = 0
+        self.atmosphereVisibility = 0
+        self.atmosphereRising = 0
+
+        self.astronomySunrise = 0
+        self.astronomySunset = 0
 
     # Loads Yahoo Weather XML dependant on woeid passed on init
     # Defaulting to celcius
@@ -34,6 +49,9 @@ class WeatherSystem:
         self.gatherWeatherCode()
         self.gatherWeatherType()
         self.gatherWeatherDescription()
+        self.gatherWind()
+        self.gatherAtmosphere()
+        self.gatherAstronomy()
         self.lowTemp, self.highTemp = self.gatherWeatherTempLowHigh()
 
     # Location from woeid, in City format
@@ -62,6 +80,29 @@ class WeatherSystem:
 
         return weatherTempLow, weatherTempHigh
 
+    # Data on wind conditions
+    def gatherWind(self):
+        yweatherWindList = self.xmlDoc.getElementsByTagName('yweather:wind')
+        self.windChill = yweatherWindList[0].attributes['chill'].value
+        self.windDirection = yweatherWindList[0].attributes['direction'].value
+        self.windSpeed = yweatherWindList[0].attributes['speed'].value
+
+    # Atmospherics information
+    def gatherAtmosphere(self):
+        yweatherAtmosphereList = self.xmlDoc.getElementsByTagName('yweather:atmosphere')
+
+        self.atmosphereHumidity = yweatherAtmosphereList[0].attributes['humidity'].value
+        self.atmosphereVisibility= yweatherAtmosphereList[0].attributes['visibility'].value
+        self.atmospherePressure = yweatherAtmosphereList[0].attributes['pressure'].value
+        self.atmosphereRising = yweatherAtmosphereList[0].attributes['rising'].value
+
+    # Sunrise and sunset times
+    def gatherAstronomy(self):
+        yweatherAstronomyList = self.xmlDoc.getElementsByTagName('yweather:astronomy')
+
+        self.astronomySunrise = yweatherAstronomyList[0].attributes['sunrise'].value
+        self.astronomySunset = yweatherAstronomyList[0].attributes['sunset'].value
+
     # Simple data dump to display gathered data
     def displayWeather(self):
         print('Weather code:', self.weatherCode)
@@ -69,7 +110,22 @@ class WeatherSystem:
             print('Weather info unavailable')
         else:
             print('Weather location:', self.weatherLocation)
+
             print('Weather description:', self.weatherDescription)
             print('Weather type:', self.weatherType)
+
             print('Weather temp low:', self.lowTemp)
             print('Weather temp high:', self.highTemp)
+
+            print('Weather wind chill:', self.windChill)
+
+            print('Weather wind direction:', self.windDirection)
+            print('Weather wind speed:', self.windSpeed)
+
+            print('Weather atmosphere humidity', self.atmosphereHumidity)
+            print('Weather atmosphere pressure', self.atmospherePressure)
+            print('Weather atmosphere visibility', self.atmosphereVisibility)
+            print('Weather atmosphere rising', self.atmosphereRising)
+
+            print('Weather astronomy sunrise', self.astronomySunrise)
+            print('Weather astronomy sunset', self.astronomySunset)
